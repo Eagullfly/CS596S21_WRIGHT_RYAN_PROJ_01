@@ -32,7 +32,7 @@ public class PGCTerrainEditor : Editor
     {
         serializedObject.Update();
 
-        PGCTerrainEditor terrain = (PGCTerrain)target;
+        PGCTerrain terrain = (PGCTerrain)target;
 
         EditorGUILayout.LabelField("PGC Terrain Editor", EditorStyles.boldLabel);
         EditorGUILayout.PropertyField(resetTerrain);
@@ -40,12 +40,12 @@ public class PGCTerrainEditor : Editor
         showPGCValues = EditorGUILayout.Foldout(showPGCValues, "PGC Values");
         if (showPGCValues)
         {
-            EditorGUILayout.LabelField("", OnInspectorGUI.skin.horizontalSlider);
-            GUILayout.Label("Set PGC Values here ", EditorStyle.boldLabel);
+            EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+            GUILayout.Label("Set PGC Values here ", EditorStyles.boldLabel);
             EditorGUILayout.PropertyField(heightScale);
             if(GUILayout.Button("Reset Terrain"))
             {
-                terrain.resetTerrain();
+                terrain.ResetTerrain();
             }
         }
 

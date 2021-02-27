@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 [ExecuteInEditMode]
+
 public class PGCTerrain : MonoBehaviour
 {
 
@@ -23,7 +24,7 @@ public class PGCTerrain : MonoBehaviour
     [System.Obsolete]
     void OnEnable()
     {
-        terrain = GetComponent<terrain>();
+        terrain = GetComponent<Terrain>();
         terrainData = terrain.terrainData;
         xSize = (int)terrain.terrainData.size.x;
         zSize = (int)terrainData.size.z;
@@ -43,5 +44,63 @@ public class PGCTerrain : MonoBehaviour
     public void SetHeightScale()
     {
         Debug.Log("Height Scale = " + heightScale);
+    }
+
+    float[,] GetHeightMap()
+    {
+        if (resetTerrain)
+        {
+            return terrainData.GetHeights(0, 0, xSize, zSize);
+        }
+        else
+            return new float[xSize, zSize];
+    }
+
+    [System.Obsolete]
+    public void ResetTerrain()
+    {
+        float[,] heightMap;
+        heightMap = new float[terrainData.detailWidth, terrainData.detailWidth];
+        for(int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+                heightMap[x, z] = 0;
+                if (z == x)
+                    heightMap[x, z] = .1f;
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void PerlinTerrain()
+    {
+        float[,] heightMap;
+        heightMap = new float[terrainData.detailWidth, terrainData.detailWidth];
+        float hillHeight = (float)((float)perlinMountainHi - (float)perlinMountainLo) / ((float)terrain.terrainData.heightmapResolution / 2);
+        float baseHeight = (float)5 / ((float)terrain.terrainData.heightmapResolution / 2);
+
+        for(int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+                heightMap[x, z] = baseHeight + (Mathf.PerlinNoise(((float)x / (float)xSize) * perlinTileSize, ((float)z / (float)zSize) * perlinTileSize) * (float)hillHeight);
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void LoadTexture()
+    {
+        heightMap = new float[xSize, zSize];
+
+        for(int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
     }
 }
