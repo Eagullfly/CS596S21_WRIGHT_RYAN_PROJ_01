@@ -12,7 +12,7 @@ public class PGCTerrain : MonoBehaviour
     public TerrainData terrainData;
     private float[,] heightMap;
     int xSize, zSize;
-
+    //public Vector3 heightMapScale = new Vector3(1, 1, 1);
     public float heightScale = 0f;
     public Texture2D heightMapImage;
     public bool resetTerrain = true;
@@ -26,14 +26,11 @@ public class PGCTerrain : MonoBehaviour
     {
         terrain = GetComponent<Terrain>();
         terrainData = terrain.terrainData;
-        xSize = (int)terrain.terrainData.size.x;
-        zSize = (int)terrainData.size.z;
+        xSize = (int)terrainData.heightmapResolution;
+        zSize = (int)terrainData.heightmapResolution;
     }
-    // Start is called before the first frame update
-    void Start()
-    {
 
-    }
+
 
     // Update is called once per frame
     void Update()
@@ -60,7 +57,7 @@ public class PGCTerrain : MonoBehaviour
     public void ResetTerrain()
     {
         float[,] heightMap;
-        heightMap = new float[terrainData.detailWidth, terrainData.detailWidth];
+        heightMap = new float[xSize, zSize];
         for(int x = 0; x < xSize; x++)
         {
             for(int z = 0; z < zSize; z++)
@@ -76,10 +73,11 @@ public class PGCTerrain : MonoBehaviour
     public void PerlinTerrain()
     {
         float[,] heightMap;
-        heightMap = new float[terrainData.detailWidth, terrainData.detailWidth];
+        heightMap = new float[xSize, zSize];
         float hillHeight = (float)((float)perlinMountainHi - (float)perlinMountainLo) / ((float)terrain.terrainData.heightmapResolution / 2);
         float baseHeight = (float)5 / ((float)terrain.terrainData.heightmapResolution / 2);
 
+        //heightMap = GetHeightMap();
         for(int x = 0; x < xSize; x++)
         {
             for(int z = 0; z < zSize; z++)
@@ -98,7 +96,7 @@ public class PGCTerrain : MonoBehaviour
         {
             for(int z = 0; z < zSize; z++)
             {
-
+                //heightMap[x, z] = heightMapImage.GetPixel((int)(x * heightMapScale.x), (int)(z * heightMapScale.z)).grayscale * heightMapScale.y;
             }
         }
         terrainData.SetHeights(0, 0, heightMap);

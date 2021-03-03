@@ -52,7 +52,9 @@ public class PGCTerrainEditor : Editor
         showPerlinValues = EditorGUILayout.Foldout(showPerlinValues, "Perlin Values");
         if (showPerlinValues)
         {
+            //EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
             GUILayout.Label("Set Perlin ", EditorStyles.boldLabel);
+            //EditorGUILayout.PropertyField(heightScale);
             EditorGUILayout.Slider(perlinMountainHi, 10, 600, new GUIContent("Top of Perlin Mountains"));
             EditorGUILayout.Slider(perlinMountainLo, -50, 9.8f, new GUIContent("Bottom of Perlin Mountains"));
             EditorGUILayout.IntSlider(perlinTileSize, 1, 129, new GUIContent("Terrain Tile Size"));

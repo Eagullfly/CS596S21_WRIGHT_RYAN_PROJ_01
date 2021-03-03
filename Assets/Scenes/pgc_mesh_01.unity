@@ -157,9 +157,9 @@ MonoBehaviour:
   heightScale: 0
   heightMapImage: {fileID: 0}
   resetTerrain: 1
-  perlinMountainHi: 0
-  perlinMountainLo: 0
-  perlinTileSize: 0
+  perlinMountainHi: 88
+  perlinMountainLo: 9.8
+  perlinTileSize: 17
 --- !u!154 &278853763
 TerrainCollider:
   m_ObjectHideFlags: 0
