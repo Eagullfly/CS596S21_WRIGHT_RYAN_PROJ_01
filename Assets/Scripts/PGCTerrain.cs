@@ -17,9 +17,26 @@ public class PGCTerrain : MonoBehaviour
     public Texture2D heightMapImage;
     public bool resetTerrain = true;
 
+    public float trigFuncHi;
+    public float trigFuncLo;
+    public float trigTileSize;
+    public float amplitude;
+    public float wavelength;
+
+    public float randomHeightRange;
+    public float randomHeightTiles;
+
     public float perlinMountainHi;
     public float perlinMountainLo;
     public int perlinTileSize;
+    public int numberOfPerlin;
+
+    public float voronoiMountainHeight;
+    //public int voronoiPoints;
+
+    //public int leftHeight;
+    //public int rightHeight;
+    public int roughness;
 
     [System.Obsolete]
     void OnEnable()
@@ -69,6 +86,38 @@ public class PGCTerrain : MonoBehaviour
         }
         terrainData.SetHeights(0, 0, heightMap);
     }
+    public void TrigTerrain()
+    {
+        float[,] heightMap;
+        heightMap = new float[xSize, zSize];
+        float hillHeight = (float)((float)trigFuncHi - (float)trigFuncLo)/ ((float)terrain.terrainData.heightmapResolution / 2);
+        float baseHeight = (float)5 / ((float)terrain.terrainData.heightmapResolution / 2);
+
+        for(int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+                heightMap[x, z] = baseHeight + (Mathf.Sin(((float)x * Mathf.PI / (float)xSize) * trigTileSize)) * (Mathf.Cos(((float)z * Mathf.PI / (float)zSize) * trigTileSize) * (float)hillHeight);
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void RandHeightTerrain()
+    {
+        float[,] heightMap;
+        heightMap = new float[xSize, zSize];
+        float hillHeight = (float)randomHeightRange / ((float)terrain.terrainData.heightmapResolution / 2);
+        float baseHeight = (float)5 / ((float)terrain.terrainData.heightmapResolution / 2);
+        for (int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+                heightMap[x, z] = baseHeight + (Mathf.Sin(((float)x/(float)xSize)*randomHeightTiles)) * (Mathf.Cos(((float)z/(float)zSize)*randomHeightTiles)) * (float)hillHeight;
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
 
     public void PerlinTerrain()
     {
@@ -83,6 +132,58 @@ public class PGCTerrain : MonoBehaviour
             for(int z = 0; z < zSize; z++)
             {
                 heightMap[x, z] = baseHeight + (Mathf.PerlinNoise(((float)x / (float)xSize) * perlinTileSize, ((float)z / (float)zSize) * perlinTileSize) * (float)hillHeight);
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void MultPerlinTerrain()
+    {
+        float[,] heightMap;
+        heightMap = new float[xSize, zSize];
+        float hillHeight = (float)((float)perlinMountainHi - (float)perlinMountainLo) / ((float)terrain.terrainData.heightmapResolution / 2);
+        float baseHeight = (float)5 / ((float)terrain.terrainData.heightmapResolution / 2);
+        for (int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+                heightMap[x,z] =  (baseHeight + (Mathf.PerlinNoise((float)numberOfPerlin,(Mathf.PerlinNoise(((float)x / (float)xSize) * perlinTileSize, ((float)z / (float)zSize) * perlinTileSize))) * (float)hillHeight));
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void VoronoiTerrain()
+    {
+        float[,] heightMap;
+        heightMap = new float[xSize, zSize];
+        float hillHeight = voronoiMountainHeight / (terrain.terrainData.heightmapResolution / 2);
+        float baseHeight = 5 / (terrain.terrainData.heightmapResolution / 2);
+        for (int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+                heightMap[x, z] =  baseHeight + (Random.value * hillHeight);
+            }
+        }
+        terrainData.SetHeights(0, 0, heightMap);
+    }
+
+    public void MidDisSoothTerrain()
+    {
+        float[,] heightMap;
+        heightMap = new float[xSize, zSize];
+        //int midpoint = (leftHeight + rightHeight) / ((int)terrain.terrainData.heightmapResolution / 2);
+        float range =  0.5f * roughness / ((int)terrain.terrainData.heightmapResolution / 2);
+        float average;
+        for (int x = 0; x < xSize; x++)
+        {
+            for(int z = 0; z < zSize; z++)
+            {
+                average = heightMap[x, z];
+                average += (Random.value * (range * 2.0f)) - range;
+                heightMap[x, z] = average;
+                    //midpoint + (x / xSize) * (z / zSize) * range;
             }
         }
         terrainData.SetHeights(0, 0, heightMap);
