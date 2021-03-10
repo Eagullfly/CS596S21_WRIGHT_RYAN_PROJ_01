@@ -12,7 +12,7 @@ public class PGCTerrain : MonoBehaviour
     public TerrainData terrainData;
     private float[,] heightMap;
     int xSize, zSize;
-    //public Vector3 heightMapScale = new Vector3(1, 1, 1);
+    
     public float heightScale = 0f;
     public Texture2D heightMapImage;
     public bool resetTerrain = true;
@@ -29,13 +29,10 @@ public class PGCTerrain : MonoBehaviour
     public float perlinMountainHi;
     public float perlinMountainLo;
     public int perlinTileSize;
-    public int numberOfPerlin;
+    
 
     public float voronoiMountainHeight;
-    //public int voronoiPoints;
-
-    //public int leftHeight;
-    //public int rightHeight;
+    
     public int roughness;
 
     [System.Obsolete]
@@ -126,7 +123,7 @@ public class PGCTerrain : MonoBehaviour
         float hillHeight = (float)((float)perlinMountainHi - (float)perlinMountainLo) / ((float)terrain.terrainData.heightmapResolution / 2);
         float baseHeight = (float)5 / ((float)terrain.terrainData.heightmapResolution / 2);
 
-        //heightMap = GetHeightMap();
+        
         for(int x = 0; x < xSize; x++)
         {
             for(int z = 0; z < zSize; z++)
@@ -140,6 +137,7 @@ public class PGCTerrain : MonoBehaviour
     public void MultPerlinTerrain()
     {
         float[,] heightMap;
+        
         heightMap = new float[xSize, zSize];
         float hillHeight = (float)((float)perlinMountainHi - (float)perlinMountainLo) / ((float)terrain.terrainData.heightmapResolution / 2);
         float baseHeight = (float)5 / ((float)terrain.terrainData.heightmapResolution / 2);
@@ -147,7 +145,13 @@ public class PGCTerrain : MonoBehaviour
         {
             for(int z = 0; z < zSize; z++)
             {
-                heightMap[x,z] =  (baseHeight + (Mathf.PerlinNoise((float)numberOfPerlin,(Mathf.PerlinNoise(((float)x / (float)xSize) * perlinTileSize, ((float)z / (float)zSize) * perlinTileSize))) * (float)hillHeight));
+                heightMap[x, z] = (baseHeight + (Mathf.PerlinNoise(((float)x / (float)xSize) * perlinTileSize, ((float)z / (float)zSize) * perlinTileSize) * (float)hillHeight));
+                for (int i = 0; i < 4; i++)
+                {
+                    heightMap[x, z] += (baseHeight + (Mathf.PerlinNoise(Mathf.Pow((((float)x / (float)xSize) * perlinTileSize), i), Mathf.Pow(((float)z / (float)zSize) * perlinTileSize,i)) / (1 / Mathf.Pow(2, i))) * (float)hillHeight);
+                }
+                heightMap[x, z] /= 60;
+                
             }
         }
         terrainData.SetHeights(0, 0, heightMap);
@@ -173,7 +177,7 @@ public class PGCTerrain : MonoBehaviour
     {
         float[,] heightMap;
         heightMap = new float[xSize, zSize];
-        //int midpoint = (leftHeight + rightHeight) / ((int)terrain.terrainData.heightmapResolution / 2);
+        
         float range =  0.5f * roughness / ((int)terrain.terrainData.heightmapResolution / 2);
         float average;
         for (int x = 0; x < xSize; x++)
@@ -183,23 +187,11 @@ public class PGCTerrain : MonoBehaviour
                 average = heightMap[x, z];
                 average += (Random.value * (range * 2.0f)) - range;
                 heightMap[x, z] = average;
-                    //midpoint + (x / xSize) * (z / zSize) * range;
+                    
             }
         }
         terrainData.SetHeights(0, 0, heightMap);
     }
 
-    public void LoadTexture()
-    {
-        heightMap = new float[xSize, zSize];
-
-        for(int x = 0; x < xSize; x++)
-        {
-            for(int z = 0; z < zSize; z++)
-            {
-                //heightMap[x, z] = heightMapImage.GetPixel((int)(x * heightMapScale.x), (int)(z * heightMapScale.z)).grayscale * heightMapScale.y;
-            }
-        }
-        terrainData.SetHeights(0, 0, heightMap);
-    }
+    
 }

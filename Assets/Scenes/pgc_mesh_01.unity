@@ -163,11 +163,10 @@ MonoBehaviour:
   amplitude: 11
   wavelength: 3.6
   randomHeightRange: 55
-  randomHeightTiles: 27
-  perlinMountainHi: 155
-  perlinMountainLo: 0
-  perlinTileSize: 28
-  numberOfPerlin: 40
+  randomHeightTiles: 44
+  perlinMountainHi: 199
+  perlinMountainLo: -19
+  perlinTileSize: 20
   voronoiMountainHeight: 14
   roughness: 6
 --- !u!154 &278853763
