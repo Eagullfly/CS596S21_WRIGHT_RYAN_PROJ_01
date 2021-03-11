@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEditor;
 
 [ExecuteInEditMode]
-
 public class PGCTerrain : MonoBehaviour
 {
 
@@ -148,9 +147,9 @@ public class PGCTerrain : MonoBehaviour
                 heightMap[x, z] = (baseHeight + (Mathf.PerlinNoise(((float)x / (float)xSize) * perlinTileSize, ((float)z / (float)zSize) * perlinTileSize) * (float)hillHeight));
                 for (int i = 0; i < 4; i++)
                 {
-                    heightMap[x, z] += (baseHeight + (Mathf.PerlinNoise(Mathf.Pow((((float)x / (float)xSize) * perlinTileSize), i), Mathf.Pow(((float)z / (float)zSize) * perlinTileSize,i)) / (1 / Mathf.Pow(2, i))) * (float)hillHeight);
+                    heightMap[x, z] += (baseHeight + (Mathf.PerlinNoise(Mathf.Pow((((float)x / (float)xSize) * perlinTileSize), i), Mathf.Pow(((float)z / (float)zSize) * perlinTileSize,i)) / (Mathf.Pow(2, i))) * (float)hillHeight);
                 }
-                heightMap[x, z] /= 60;
+                heightMap[x, z] /= 4;
                 
             }
         }
